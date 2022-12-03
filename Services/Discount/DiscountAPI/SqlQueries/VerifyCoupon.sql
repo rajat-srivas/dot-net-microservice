@@ -1,0 +1,1 @@
+﻿Select * from Coupon where CouponCode = @CouponCode and Status = 'A';
