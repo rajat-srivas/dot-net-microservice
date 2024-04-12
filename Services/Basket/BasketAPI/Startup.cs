@@ -2,11 +2,14 @@ using BasketAPI.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +39,11 @@ namespace BasketAPI
 
 			services.AddStackExchangeRedisCache(options =>
 			{
-				options.Configuration = Configuration.GetValue<string>("CacheSettings:RedisCache");
+				options.Configuration = Configuration.GetValue<string>("CacheSettings:RedisCache");				
 			});
 
 			services.AddSingleton<IBasketRepository, BasketRepository>();
+			services.Add(ServiceDescriptor.Singleton<IDistributedCache, RedisCache>());
 
 			services.AddControllers();
 		}
